@@ -38,8 +38,8 @@ const displayController = (() => { //
     }
 
     const startGame = () => {
-        const name1 = playerOneInput || "Player 1";
-        const name2 = playerTwoInput || "Player 2";
+        const name1 = playerOneInput.value || "Player 1";
+        const name2 = playerTwoInput.value || "Player 2";
         gameController.start(name1, name2);
         renderBoard();
         messageElement.textContent = `${name1}'s turn!`;
@@ -54,7 +54,7 @@ const displayController = (() => { //
     startButton.addEventListener("click", startGame);
     resetButton.addEventListener("click", resetGame);
 
-})
+})();
 
 
 //define gameboard
