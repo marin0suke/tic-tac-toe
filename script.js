@@ -26,14 +26,19 @@ const displayController = (() => { //
     };
 
     const handleCellClick = (row, col) => {
-        if (gameController.playTurn(row, col)) {
+        const result = gameController.playTurn(row, col);
+
+        if (result === "win") {
             renderBoard();
             messageElement.textContent = `${gameController.getCurrentPlayerName()} wins!`;
-        } else if (gameController.checkTie()) {
+        } else if (result === "tie") {
+            renderBoard();
             messageElement.textContent = "It's a tie!";
+        } else if (result === "occupied") {
+            messageElement.textContent = "Cell is already occupied! Choose a vacant cell.";
         } else {
             renderBoard();
-            messageElement.textContent = `${gameController.getCurrentPlayerName}'s turn`;
+            messageElement.textContent = `${gameController.getCurrentPlayerName()}'s turn`;
         }
     }
 
@@ -138,18 +143,16 @@ const gameController = (() => { // this is an IIFE! immediately invoked function
     //play turn
     const playTurn = (row, column) => {
         if (board.placeMarker(row, column, currentPlayer.marker)) { // attempt to place marker. returns true if success.
-            if (checkWin()) {// after every marker is placed, we check for a win.
-                console.log(`${currentPlayer.playerName} wins!`);
-                return;
+            if (checkWin()) {
+                return "win";
             }
             if (checkTie()) {
-                console.log("It's a tie!");
-                return;
+                return "tie";
             }
             switchTurn(); // no win or tie means the game continues, so next person goes.
-        } else {
-            console.log(("Cell is already occupied! Choose a vacant cell."));
-        }
+            return "continue";
+        } 
+        return "occupied"; 
     };
 
     // reset the game when needed.
