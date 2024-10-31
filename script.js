@@ -1,3 +1,29 @@
+// DOM elements and ui
+const displayController = (() => { // 
+    //first connect all the elements we want to change, control, display dynamically.
+    const boardElement = document.querySelector("#board");
+    const messageElement = document.querySelector("#message");
+    const playerOneInput = document.querySelector("#playerOneName");
+    const playerTwoInput = document.querySelector("#playerTwoName");
+    const startButton = document.querySelector("#startButton");
+    const resetButton = document.querySelector("#resetButton");
+
+    let player1, player2;
+
+    const renderBoard = () => {
+        boardElement.innerHTML = ""; // clear the board.
+
+        const board = gameController.getBoard(); // get current board state.
+        board.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                const cellElement = document.createElement("div");
+                cellElement.classList.add("cell");
+                cellElement.textContent = cell; // x, o or empty "-" .. ?
+            })
+        })
+    }
+})
+
 
 //define gameboard
 
