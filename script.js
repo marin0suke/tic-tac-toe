@@ -161,7 +161,7 @@ const gameController = (() => { // this is an IIFE! immediately invoked function
     const getBoard = () => board.getBoard(); // expose for export
     const getCurrentPlayerName = () => currentPlayer.playerName;
 
-    return { start, getBoard, getCurrentPlayerName, playTurn, resetGame }; // we expose only these two methods to control the game from the outside of gameController. hides checkWin, checkTie, and switchTurn
+    return { start, getBoard, getCurrentPlayerName, playTurn, resetGame, checkTie }; // we expose only these two methods to control the game from the outside of gameController. hides checkWin, checkTie, and switchTurn
     // bc gameController is an IIFE, we need to explicitly return what we want accessible outside of this function.
     // this returned obj becomes the public API of gameController.
 
