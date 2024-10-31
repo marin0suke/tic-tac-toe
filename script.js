@@ -27,12 +27,78 @@ function gameboard() {
 
 }
 
-function createPlayer(name, marker) {
+function createPlayer(name, marker) { // factory function to create player - makes code clean and readable.
     const playerName = name;
     return { playerName, marker };
 }
 
-function gameController() {
+const gameController = (() => { // this is an IIFE! immediately invoked function expression. this creates a single instance of game controller.
+    // initialise everything we need.
+    const player1 = createPlayer("Player 1", "X");
+    const player2 = createPlayer("Player 2", ")");
+    const board = gameboard(); // initialise gameboard module.
+    let currentPlayer = player1; // can randomise this later.
 
-}
+    // manage turns
+    const switchTurn = () => {
+        currentPlayer = currentPlayer === player1 ? player2 : player1; // ternary to switch based on who is current.
+    }
+
+    // checking for win or tie after each move
+    const checkWin = () => { // arrow function used here to avoid "this" binding issues. best practice. arrow functions used for simple, non-method functions. (don't use arrows for object methods and ctors.)
+        const boardState = board.getBoard(); // a snapshot of the current board. dot notation. WHY - accessing in a controlled way - interacting with the board as designed by the gameboard module (via getBoard const)
+        const winPatterns = [
+            [ [0, 0], [0, 1], [0, 2] ], // rows
+            [ [1, 0], [1, 1], [1, 2] ],
+            [ [2, 0], [2, 1], [2, 2] ],
+            [ [0, 0], [1, 0], [2, 0] ], // columns
+            [ [0, 1], [1, 1], [2, 1] ],
+            [ [0, 2], [1, 2], [2, 2] ],
+            [ [0, 0], [1, 1], [2, 2] ], // diagonals
+            [ [0, 2], [1, 1], [2, 0] ]
+        ];
+
+        return winPatterns.some(pattern => pattern.every(([row, col]) => boardState[row[col]] === currentPlayer.marker));
+        /* higher order array functions. some() is a short-circuiting method that 
+         returns true as soon as any winning pattern matches the current players marker.
+         we used every() within some() to check each cell in the pattern. destructuring [row][col]
+         is used to unpack coordinates, making it concise. */
+
+    
+          
+    };
+
+    const checkTie = () => {
+        const boardState = board.getBoard();
+        return boardState.every(row => row.every(cell => cell !== "-"));
+    };
+
+    //play turn
+    const playTurn = (row, column) => {
+        if (board.placeMarker(row, column, currentPlayer.marker)) { // attempt to place marker. returns true if success.
+            if (checkWin()) {// after every marker is placed, we check for a win.
+                console.log(`${currentPlayer.playerName} wins!`);
+                return;
+            }
+            if (checkTie()) {
+                console.log("It's a tie!");
+                return;
+            }
+            switchTurn(); // no win or tie means the game continues, so next person goes.
+        } else {
+            console.log(("Cell is already occupied! Choose a vacant cell."));
+        }
+    };
+
+    // reset the game when needed.
+    const resetGame = () => {
+        board.getBoard().forEach((row) => row.fill("-")); // to fill each cell again with "empty" value. avoid manually looping through indices since board is already created.
+        currentPlayer = player1; // reset to player one.
+    }
+
+    return { playTurn, resetGame }; // we expose only these two methods to control the game from the outside of gameController. hides checkWin, checkTie, and switchTurn
+    // bc gameController is an IIFE, we need to explicitly return what we want accessible outside of this function.
+    // this returned obj becomes the public API of gameController.
+
+})();
 
