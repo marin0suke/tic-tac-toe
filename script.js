@@ -2,29 +2,37 @@
 //define gameboard
 
 function gameboard() {
-    const rows = 3;
-    const columns = 3;
+    const rows = 2;
+    const columns = 2;
     const board = [];
 
-    for (let i = 1; i <= rows; i++) {
+    for (let i = 0; i <= rows; i++) {
         board[i] = []; // each element in board will get an array inside it. (creating of cells)
-        for (let j = 1; j <= columns; j++) {
+        for (let j = 0; j <= columns; j++) {
             board[i].push("-"); // cell will be defined later.
         }
     }
 
     const getBoard = () => board; // this will retrieve the board.
 
-    const dropMarker = (row, column, player) => {
-        const availableCells = 
-            board.filter((row) => 
-                row[column].getValue() === "-").map(row => row[column]); // gets us back all the possible places we can dropMarker.
-
-        if (!availableCells.length) return; // if no available cells, return.    
+    const placeMarker = (row, column, marker) => {
+        if (board[row][column] === "-") {
+            board[row][column] = marker;
+            return true; // indicates placement was successful.
+        } 
+        return false; // indicates cell was already occupied.
     }
+
+    return { placeMarker, getBoard };
 
 }
 
+function createPlayer(name, marker) {
+    const playerName = name;
+    return { playerName, marker };
+}
 
+function gameController() {
 
-//obj for game logic
+}
+
