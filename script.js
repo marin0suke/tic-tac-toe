@@ -9,11 +9,20 @@ function gameboard() {
     for (let i = 1; i <= rows; i++) {
         board[i] = []; // each element in board will get an array inside it. (creating of cells)
         for (let j = 1; j <= columns; j++) {
-            board[i].push("x"); // cell will be defined later.
+            board[i].push("-"); // cell will be defined later.
         }
     }
 
-    console.log(board);
+    const getBoard = () => board; // this will retrieve the board.
+
+    const dropMarker = (row, column, player) => {
+        const availableCells = 
+            board.filter((row) => 
+                row[column].getValue() === "-").map(row => row[column]); // gets us back all the possible places we can dropMarker.
+
+        if (!availableCells.length) return; // if no available cells, return.    
+    }
+
 }
 
 
