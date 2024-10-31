@@ -51,9 +51,9 @@ const displayController = (() => { //
     };
 
     const resetGame = () => {
-        gameController.resetGame();
+        const startingPlayer = gameController.resetGame();
         renderBoard();
-        messageElement.textContent = "Game reset. Start again!";
+        messageElement.textContent = `${startingPlayer}'s turn first!`;
     };
 
     startButton.addEventListener("click", startGame);
@@ -158,7 +158,9 @@ const gameController = (() => { // this is an IIFE! immediately invoked function
     // reset the game when needed.
     const resetGame = () => {
         board.getBoard().forEach((row) => row.fill("-")); // to fill each cell again with "empty" value. avoid manually looping through indices since board is already created.
-        currentPlayer = player1; // reset to player one.
+        currentPlayer = Math.random() < 0.5 ? player1 : player2;
+        return currentPlayer.playerName;
+        // message element doesn't get updated here!! DOM stuff separate. 
     }
 
     const getBoard = () => board.getBoard(); // expose for export
