@@ -19,9 +19,41 @@ const displayController = (() => { //
                 const cellElement = document.createElement("div");
                 cellElement.classList.add("cell");
                 cellElement.textContent = cell; // x, o or empty "-" .. ?
-            })
-        })
+                cellElement.addEventListener("click", () => handleCellClick(rowIndex, colIndex));
+                boardElement.appendChild(cellElement);
+            });
+        });
+    };
+
+    const handleCellClick = (row, col) => {
+        if (gameController.playTurn(row, col)) {
+            renderBoard();
+            messageElement.textContent = `${gameController.getCurrentPlayerName()} wins!`;
+        } else if (gameController.checkTie()) {
+            messageElement.textContent = "It's a tie!";
+        } else {
+            renderBoard();
+            messageElement.textContent = `${gameController.getCurrentPlayerName}'s turn`;
+        }
     }
+
+    const startGame = () => {
+        const name1 = playerOneInput || "Player 1";
+        const name2 = playerTwoInput || "Player 2";
+        gameController.start(name1, name2);
+        renderBoard();
+        messageElement.textContent = `${name1}'s turn!`;
+    };
+
+    const resetGame = () => {
+        gameController.resetGame();
+        renderBoard();
+        messageElement.textContent = "Game reset. Start again!";
+    };
+
+    startButton.addEventListener("click", startGame);
+    resetButton.addEventListener("click", resetGame);
+
 })
 
 
