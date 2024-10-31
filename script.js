@@ -34,10 +34,14 @@ function createPlayer(name, marker) { // factory function to create player - mak
 
 const gameController = (() => { // this is an IIFE! immediately invoked function expression. this creates a single instance of game controller.
     // initialise everything we need.
-    const player1 = createPlayer("Player 1", "X");
-    const player2 = createPlayer("Player 2", ")");
-    const board = gameboard(); // initialise gameboard module.
-    let currentPlayer = player1; // can randomise this later.
+    let currentPlayer, player1, player2; // initialise empty vars.
+    const board = gameboard(); // initialise gameboard module. grabs from gameboard.
+
+    const start = (p1, p2) => {
+        player1 = createPlayer(p1, "X");
+        player2 = createPlayer(p2, "O");
+        currentPlayer = Math.random() < 0.5 ? player1 : player2; // randomises who starts.
+    }
 
     // manage turns
     const switchTurn = () => {
@@ -58,7 +62,7 @@ const gameController = (() => { // this is an IIFE! immediately invoked function
             [ [0, 2], [1, 1], [2, 0] ]
         ];
 
-        return winPatterns.some(pattern => pattern.every(([row, col]) => boardState[row[col]] === currentPlayer.marker));
+        return winPatterns.some(pattern => pattern.every(([row, col]) => boardState[row][col] === currentPlayer.marker));
         /* higher order array functions. some() is a short-circuiting method that 
          returns true as soon as any winning pattern matches the current players marker.
          we used every() within some() to check each cell in the pattern. destructuring [row][col]
@@ -96,7 +100,10 @@ const gameController = (() => { // this is an IIFE! immediately invoked function
         currentPlayer = player1; // reset to player one.
     }
 
-    return { playTurn, resetGame }; // we expose only these two methods to control the game from the outside of gameController. hides checkWin, checkTie, and switchTurn
+    const getBoard = () => board.getBoard(); // expose for export
+    const getCurrentPlayerName = () => currentPlayer.playerName;
+
+    return { start, getBoard, getCurrentPlayerName, playTurn, resetGame }; // we expose only these two methods to control the game from the outside of gameController. hides checkWin, checkTie, and switchTurn
     // bc gameController is an IIFE, we need to explicitly return what we want accessible outside of this function.
     // this returned obj becomes the public API of gameController.
 
