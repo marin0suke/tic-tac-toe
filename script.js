@@ -5,10 +5,10 @@ const displayController = (() => { //
     const messageElement = document.querySelector("#message");
     const playerOneInput = document.querySelector("#playerOneName");
     const playerTwoInput = document.querySelector("#playerTwoName");
-    const startButton = document.querySelector("#startButton");
-    const resetButton = document.querySelector("#resetButton");
+    const startResetButton = document.querySelector("#startResetButton");
 
     let player1, player2;
+    let gameStarted = false; // track if game is started. 
 
     const renderBoard = () => {
         boardElement.innerHTML = ""; // clear the board.
@@ -47,7 +47,9 @@ const displayController = (() => { //
         const name2 = playerTwoInput.value || "Player 2";
         gameController.start(name1, name2);
         renderBoard();
-        messageElement.textContent = `${name1}'s turn!`;
+        messageElement.textContent = `${gameController.getCurrentPlayerName()}'s turn!`;
+        gameStarted = true; // 
+        startResetButton.textContent = "Reset Game";
     };
 
     const resetGame = () => {
@@ -56,9 +58,13 @@ const displayController = (() => { //
         messageElement.textContent = `${startingPlayer}'s turn first!`;
     };
 
-    startButton.addEventListener("click", startGame);
-    resetButton.addEventListener("click", resetGame);
-
+    startResetButton.addEventListener("click", () => {
+        if (!gameStarted) {
+            startGame();
+        } else {
+            resetGame();
+        }
+    });
 })();
 
 
