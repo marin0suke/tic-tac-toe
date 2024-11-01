@@ -101,6 +101,8 @@ function createPlayer(name, marker) { // factory function to create player - mak
     return { playerName, marker };
 }
 
+// control game flow.
+
 const gameController = (() => { // this is an IIFE! immediately invoked function expression. this creates a single instance of game controller.
     // initialise everything we need.
     let currentPlayer, player1, player2; // initialise empty vars.
